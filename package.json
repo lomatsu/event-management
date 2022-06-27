@@ -1,0 +1,8 @@
+{
+  "name": "event-management",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/lomatsu/event-management.git",
+  "author": "Lauro Omatsu <lauroomatsu@gmail.com>",
+  "license": "MIT"
+}

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  events-management-api:
+    build: .
+    container_name: "events-management-api"
+    command: sh -c "npm run knex:migrate && npm run build && npm run start:dev"
+    ports:
+      - 3001:3001
+    volumes:
+      - .:/usr/app
+    links:
+      - events-management-db
+    depends_on:
+      - events-management-db
+    environment: 
+      DB_HOST: host.doker.internal
+      DB_USER: postgres
+      DB_PASS: 1234@mudar
+  events-management-db:
+    image: postgres:alpine
+    container_name: events-management-db
+    ports:
+      - "5433:5432"
+    environment:
+        POSTGRES_NAME: events_management_db
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: 1234@mudar
+        POSTGRES_HOST: 127.0.0.1
+        POSTGRES_PORT: 5432
+    volumes:
+      - events_management_db:/var/lib/postgresql/data
+
+volumes:
+  events_management_db:
