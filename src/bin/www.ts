@@ -8,12 +8,12 @@ import app from "../app"
 //  import knex from "../database/connection"
 import http from "http"
 import { Request, Response } from "express"
-//  import Debug from "../common/debug"
+import Debug from "../common/debug"
 //  import { } from "../repositories"
 import { AddressInfo } from "net"
 //  import { tableName } from "../database/helps"
 //  import { registerTagTypeRoute } from "../routes"
-//  const debug = Debug()
+const debug = Debug()
 
 app.use("/api/health-check", (_: Request, res: Response) => {
   res.json({ message: "System OK", env: process.env.NODE_ENV })
@@ -65,7 +65,7 @@ app.set("port", port)
  */
 
 const server = http.createServer(app)
-// debug("Environment =>", process.env.NODE_ENV)
+debug("Environment =>", process.env.NODE_ENV)
 
 if (process.env.NODE_ENV !== "test") {
   /**
@@ -131,7 +131,7 @@ function onListening() {
   const addr: string | AddressInfo | null = server.address()
   const bind =
     typeof addr === "string" ? "pipe " + addr : "port " + (addr || {}).port
-  // debug("Listening on " + bind)
+  debug("Listening on " + bind)
 }
 
 export default app
