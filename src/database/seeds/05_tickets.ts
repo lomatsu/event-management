@@ -1,13 +1,24 @@
 import { Knex } from "knex";
+import { tableName } from "../helps";
 
 export async function seed(knex: Knex): Promise<void> {
-    // Deletes ALL existing entries
-    await knex("table_name").del();
-
-    // Inserts seed entries
-    await knex("table_name").insert([
-        { id: 1, colName: "rowValue1" },
-        { id: 2, colName: "rowValue2" },
-        { id: 3, colName: "rowValue3" }
-    ]);
+    try {
+        const data = await knex(tableName.TICKETS).select("*").first();
+        if (data) {
+          console.log("Skipping seed table TICKETS");
+          return;
+        }
+    
+    
+        await knex(tableName.TICKETS).insert([
+          {
+            event_id: 1,
+          },
+          {
+            event_id: 2
+          },
+        ]);
+      } catch (error) {
+        console.log("Error on seed 05_TICKETS -> ", error);
+      }
 };
