@@ -5,13 +5,13 @@
  */
 
 import app from "../app"
-//  import knex from "../database/connection"
+import knex from "../database/connection"
 import http from "http"
 import { Request, Response } from "express"
 import Debug from "../common/debug"
 //  import { } from "../repositories"
 import { AddressInfo } from "net"
-//  import { tableName } from "../database/helps"
+import { tableName } from "../database/helps"
 //  import { registerTagTypeRoute } from "../routes"
 const debug = Debug()
 
@@ -19,39 +19,23 @@ app.use("/api/health-check", (_: Request, res: Response) => {
   res.json({ message: "System OK", env: process.env.NODE_ENV })
 })
 
-//  app.use("/api/health-check-database", (_: Request, res: Response) => {
-//    knex
-//      .select("*")
-//      .from(tableName.USERS)
-//      .first()
-//      .then(() => {
-//        res.json({ message: "Database OK" })
-//      })
-//      .catch((err) => {
-//        debug("Error on connect database", err.message)
-//        if (err.message === 'database "k12-database" does not exist') {
-//          res.json({ msg: "Database OK" })
-//        } else {
-//          res.json({ error: "Error Database" })
-//        }
-//      })
-//  })
-
-// register routes
-// registerContentTreeRoute(
-//   app,
-//   new ContentTreeRepository(knex),
-//   new ProfileRepository(knex),
-//   new ProfileTypeRepository(knex),
-//   new UserRepository(knex),
-//   new NotificationRepository(knex),
-//   new NotificationReaderRepository(knex),
-//   new ClassRepository(knex),
-//   new ClassTypeRepository(knex),
-//   new InteractionRepository(knex),
-//   new InteractionTypeRepository(knex),
-//   new InviteRepository(knex)
-// )
+app.use("/api/health-check-database", (_: Request, res: Response) => {
+  knex
+    .select("*")
+    .from(tableName.USERS)
+    .first()
+    .then(() => {
+      res.json({ message: "Database OK" })
+    })
+    .catch((err) => {
+      debug("Error on connect database", err.message)
+      if (err.message === 'database does not exist') {
+        res.json({ msg: "Database OK" })
+      } else {
+        res.json({ error: "Error Database" })
+      }
+    })
+})
 
 /**
  * Get port from environment and store in Express.
