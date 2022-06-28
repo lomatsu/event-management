@@ -1,13 +1,15 @@
 import { Application, Request, Response } from "express";
 import { ControllerBase } from "../common/ControllerBase";
 import { EventModel } from "../database/model/Event";
-import { ITicketRepository } from "../repositories";
 import { IEventRepository } from "../repositories/EventRepository";
 import { EventViewModel } from "../view-model/EventViewModel";
 
 export class EventController extends ControllerBase<IEventRepository> {
 	public static readonly baseRouter: string = "/api/events"
-	constructor(app: Application, repository: IEventRepository, private ticketRepository: ITicketRepository) {
+	constructor(
+		app: Application,
+		repository: IEventRepository,
+	) {
 		super(app, repository)
 	}
 
@@ -60,11 +62,16 @@ export class EventController extends ControllerBase<IEventRepository> {
 			res.status(500).json({ message: "Error on get event by id" })
 		}
 	}
+
 	public async save(req: Request, res: Response): Promise<void> {
 		try {
-			const { body } = req
-
+			const body: EventViewModel = req.body
+			if (!body) {
+				res.status(400).json({ message: "Body is required" })
+			}
+			body.ticketsSold = 0
 			const data = new EventModel(body)
+
 			const event = await this.repository.create(data)
 			const response = new EventViewModel(event)
 
