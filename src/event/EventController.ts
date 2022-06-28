@@ -33,6 +33,10 @@ export class EventController extends ControllerBase<IEventRepository> {
 				return
 			}
 			const response = new EventViewModel(event)
+			response.companyName = await (await this.companyRepository.getById(response.companyId)).name
+			const place = await (await this.placeRepository.getById(response.placeId))
+			response.placeName = place.name
+			response.placeCapacity = place.total_amount
 
 			res.json(response)
 		} catch (error) {
@@ -62,9 +66,6 @@ export class EventController extends ControllerBase<IEventRepository> {
 
 			res.json(response)
 
-
-
-
 		} catch (error) {
 			res.status(500).json({ message: "Error on get all events" })
 		}
@@ -83,7 +84,10 @@ export class EventController extends ControllerBase<IEventRepository> {
 				return
 			}
 			const response = new EventViewModel(event)
-
+			response.companyName = await (await this.companyRepository.getById(response.companyId)).name
+			const place = await (await this.placeRepository.getById(response.placeId))
+			response.placeName = place.name
+			response.placeCapacity = place.total_amount
 			res.json(response)
 		} catch (error) {
 			res.status(500).json({ message: "Error on get event by id" })
