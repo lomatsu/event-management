@@ -1,44 +1,64 @@
 {
-  "name": "event-management",
-  "version": "0.0.1",
-  "main": "index.js",
-  "scripts": {
-    "start": "NODE_ENV=production node ./dist/src/bin/www",
-    "start:dev": "node ./dist/src/bin/www",
-    "build": "rm -rf ./dist && ./node_modules/.bin/tsc -p tsconfig.json",
-    "test": "jest",
-    "knex": "./node_modules/.bin/knex --knexfile ./src/config/knexfile.ts",
-    "knex:make:migrate": "npm run knex -- migrate:make",
-    "knex:migrate": "npm run knex -- migrate:latest",
-    "knex:make:seed": "npm run knex -- seed:make",
-    "knex:seed": "npm run knex -- seed:run",
-    "knex:migrate:rollback": "npm run knex migrate:rollback",
-    "knex:migrate:prod": "NODE_ENV=production npm run knex -- migrate:latest",
-    "knex:migrate:rollback:prod": "NODE_ENV=production npm run knex migrate:rollback"
-  },
-  "repository": "https://github.com/lomatsu/event-management.git",
-  "author": "Lauro Omatsu <lauroomatsu@gmail.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
-    "@types/cors": "^2.8.12",
-    "@types/debug": "^4.1.7",
-    "@types/express": "^4.17.13",
-    "@types/knex": "^0.16.1",
-    "@types/morgan": "^1.9.3",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^4.7.4"
-  },
-  "dependencies": {
-    "bcrypt": "^5.0.1",
-    "cors": "^2.8.5",
-    "debug": "^4.3.4",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "jest": "^28.1.1",
-    "knex": "^2.1.0",
-    "knex-tiny-logger": "^2.1.0",
-    "morgan": "^1.10.0",
-    "pg": "^8.7.3"
-  }
+	"name": "event-management",
+	"version": "0.0.1",
+	"main": "index.js",
+	"scripts": {
+		"start": "NODE_ENV=production node ./dist/src/bin/www",
+		"start:dev": "node ./dist/src/bin/www",
+		"build": "rm -rf ./dist && ./node_modules/.bin/tsc -p tsconfig.json",
+		"test": "jest",
+		"lint": "pretty-quick --staged && lint-staged",
+		"knex": "./node_modules/.bin/knex --knexfile ./src/config/knexfile.ts",
+		"knex:make:migrate": "npm run knex -- migrate:make",
+		"knex:migrate": "npm run knex -- migrate:latest",
+		"knex:make:seed": "npm run knex -- seed:make",
+		"knex:seed": "npm run knex -- seed:run",
+		"knex:migrate:rollback": "npm run knex migrate:rollback",
+		"knex:migrate:prod": "NODE_ENV=production npm run knex -- migrate:latest",
+		"knex:migrate:rollback:prod": "NODE_ENV=production npm run knex migrate:rollback"
+	},
+	"repository": "https://github.com/lomatsu/event-management.git",
+	"author": "Lauro Omatsu <lauroomatsu@gmail.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/bcrypt": "^5.0.0",
+		"@types/cors": "^2.8.12",
+		"@types/debug": "^4.1.7",
+		"@types/express": "^4.17.13",
+		"@types/knex": "^0.16.1",
+		"@types/morgan": "^1.9.3",
+		"@typescript-eslint/eslint-plugin": "^5.30.0",
+		"@typescript-eslint/parser": "^5.30.0",
+		"eslint": "^8.18.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-import-resolver-typescript": "^3.1.1",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-prettier": "^4.1.0",
+		"prettier": "^2.7.1",
+		"pretty-quick": "^3.1.3",
+		"ts-node-dev": "^2.0.0",
+		"typescript": "^4.7.4"
+	},
+	"dependencies": {
+		"bcrypt": "^5.0.1",
+		"cors": "^2.8.5",
+		"debug": "^4.3.4",
+		"dotenv": "^16.0.1",
+		"express": "^4.18.1",
+		"jest": "^28.1.1",
+		"knex": "^2.1.0",
+		"knex-tiny-logger": "^2.1.0",
+		"morgan": "^1.10.0",
+		"pg": "^8.7.3"
+	},
+	"prettier": {
+		"singleQuote": false,
+		"tabWidth": 2,
+		"semi": false,
+		"trailingComma": "es5"
+	},
+	"lint-staged": {
+		"*.{ts,js}": "eslint --cache --fix"
+	}
 }
