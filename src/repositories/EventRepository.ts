@@ -10,7 +10,7 @@ export interface IEventRepository extends IRepository<EventModel> {
 export class EventRepository implements IEventRepository {
 	constructor(private db: Knex) { }
 	getByName(name: string): Promise<EventModel> {
-		return this.db.select("*").from(tableName.EVENTS).where({ name }).then((d) => d[0])
+		return this.db.select("*").from(tableName.EVENTS).whereRaw(`name ILIKE ?`, [`%${name}%`]).then((d) => d[0])
 	}
 	getAll(): Promise<EventModel[]> {
 		return this.db.select("*").from(tableName.EVENTS)

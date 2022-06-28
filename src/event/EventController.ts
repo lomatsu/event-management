@@ -83,5 +83,6 @@ export class EventController extends ControllerBase<IEventRepository> {
 		this.app.get(EventController.baseRouter, this.getAll.bind(this))
 		this.app.post(EventController.baseRouter, this.save.bind(this))
 		this.app.get(`${EventController.baseRouter}/:id`, this.getById.bind(this))
+		this.app.get(`${EventController.baseRouter}/by-name/:name`, this.getByName.bind(this))
 	}
 }
