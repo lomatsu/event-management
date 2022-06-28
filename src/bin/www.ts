@@ -42,6 +42,7 @@ app.use("/api/health-check-database", (_: Request, res: Response) => {
 registerEventRoute(
 	app,
 	new EventRepository(knex),
+	new UserRepository(knex)
 )
 
 registerUserRoute(
