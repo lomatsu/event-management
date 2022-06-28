@@ -11,6 +11,5 @@ export class PurchaseViewModel {
     this.purchaseMadeIn = params.purchase_made_in ? params.purchase_made_in : new Date()
     this.userId = params.user_id
     this.eventId = params.event_id
-
   }
 }

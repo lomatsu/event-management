@@ -4,14 +4,18 @@ import { EventModel } from "../database/model/Event";
 import { IEventRepository } from "../repositories/EventRepository";
 import { EventViewModel } from "../view-model/EventViewModel";
 import { auth } from '../common/middlewares/auth'
-import { IUserRepository } from "../repositories";
+import { ICompanyRepository, IPlaceRepository, IUserRepository } from "../repositories";
+import { CompanyViewModel } from "../view-model/CompanyViewModel";
+import { PlaceViewModel } from "../view-model/PlaceViewModel";
 
 export class EventController extends ControllerBase<IEventRepository> {
 	public static readonly baseRouter: string = "/api/events"
 	constructor(
 		app: Application,
 		repository: IEventRepository,
-		private userRepository: IUserRepository
+		private userRepository: IUserRepository,
+		private placeRepository: IPlaceRepository,
+		private companyRepository: ICompanyRepository
 	) {
 		super(app, repository)
 	}
@@ -37,10 +41,30 @@ export class EventController extends ControllerBase<IEventRepository> {
 	}
 	public async getAll(_: Request, res: Response): Promise<void> {
 		try {
+			const response: EventViewModel[] = []
 			const events = await this.repository.getAll()
-			const response = events.map((event) => new EventViewModel(event))
+			const companies = await this.companyRepository.getAll()
+			const places = await this.placeRepository.getAll()
+			events.map((x) => new EventViewModel(x))
+				.forEach((event) => {
+					event.companyName = companies
+						.map((x) => new CompanyViewModel(x))
+						.find((x) => x.id === event.companyId)?.name
+
+					const place = places
+						.map((x) => new PlaceViewModel(x))
+						.find((x) => x.id === event.placeId)
+
+					event.placeName = place?.name
+					event.placeCapacity = place?.totalAmount
+					response.push(event)
+				})
 
 			res.json(response)
+
+
+
+
 		} catch (error) {
 			res.status(500).json({ message: "Error on get all events" })
 		}

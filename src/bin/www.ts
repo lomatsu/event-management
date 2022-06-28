@@ -13,7 +13,7 @@ import Debug from "../common/debug"
 import { AddressInfo } from "net"
 import { tableName } from "../database/helps"
 import { registerUserRoute, registerEventRoute, registerPurchaseRoute } from "../routes"
-import { EventRepository, PlaceRepository, PurchaseRepository, UserRepository } from "../repositories"
+import { CompanyRepository, EventRepository, PlaceRepository, PurchaseRepository, UserRepository } from "../repositories"
 const debug = Debug()
 
 app.use("/api/health-check", (_: Request, res: Response) => {
@@ -42,7 +42,9 @@ app.use("/api/health-check-database", (_: Request, res: Response) => {
 registerEventRoute(
 	app,
 	new EventRepository(knex),
-	new UserRepository(knex)
+	new UserRepository(knex),
+	new PlaceRepository(knex),
+	new CompanyRepository(knex)
 )
 
 registerUserRoute(
