@@ -4,8 +4,8 @@ Este repositório é um MVP criado para gerir eventos
 
 Ambientes:
 
-- Production - [https://omatsu-events-management.herokuapp.com](https://omatsu-events-management.herokuapp.com)
-- Local - [localhost:3000](localhost:3000)
+- Production - [omatsu-events-management.herokuapp.com](https://omatsu-events-management.herokuapp.com)
+- Local - [localhost:3000](http://localhost:3000/)
 
 
 ## Contents
