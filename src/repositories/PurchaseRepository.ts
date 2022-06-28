@@ -3,15 +3,15 @@ import { tableName } from "../database/helps";
 import { PurchaseModel } from "../database/model/Purchase";
 import { IRepository } from "./Repository";
 
-export interface IPurchaseRepository extends IRepository<PurchaseModel> {}
+export interface IPurchaseRepository extends IRepository<PurchaseModel> { }
 
 export class PurchaseRepository implements IPurchaseRepository {
 	constructor(private db: Knex) { }
 	getAll(): Promise<PurchaseModel[]> {
-		throw new Error("Method not implemented.");
+		return this.db.select("*").from(tableName.PURCHASES)
 	}
 	getById(id: number): Promise<PurchaseModel> {
-		throw new Error("Method not implemented.");
+		return this.db.select("*").from(tableName.PURCHASES).where({ id }).then((d) => d[0])
 	}
 	update(data: Partial<PurchaseModel>): Promise<PurchaseModel> {
 		throw new Error("Method not implemented.");

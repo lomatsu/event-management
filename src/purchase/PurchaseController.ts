@@ -18,8 +18,8 @@ export class PurchaseController extends ControllerBase<IPurchaseRepository> {
 
 	public async getAll(_: Request, res: Response): Promise<void> {
 		try {
-			const Purchases = await this.repository.getAll()
-			const response = Purchases.map((Purchase) => new PurchaseViewModel(Purchase))
+			const purchases = await this.repository.getAll()
+			const response = purchases.map((purchase) => new PurchaseViewModel(purchase))
 
 			res.json(response)
 		} catch (error) {
@@ -55,15 +55,17 @@ export class PurchaseController extends ControllerBase<IPurchaseRepository> {
 			}
 			const event = await this.eventRepository.getById(body.eventId)
 			const eventCapacity = await (await this.placeRepository.getById(event.place_id)).total_amount as number
-			if(event.tickets_sold > eventCapacity) {
+			if(event.tickets_sold >= eventCapacity) {
 				res.status(400).json({message: "Tickets sold out"})
 				return
 			}
 
+			event.tickets_sold += 1
+			await this.eventRepository.update(event)
 			const data = new PurchaseModel(body)
 
-			const Purchase = await this.repository.create(data)
-			const response = new PurchaseViewModel(Purchase)
+			const purchase = await this.repository.create(data)
+			const response = new PurchaseViewModel(purchase)
 
 			res.json(response)
 		} catch (error) {
