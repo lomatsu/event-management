@@ -3,12 +3,15 @@ import { ControllerBase } from "../common/ControllerBase";
 import { EventModel } from "../database/model/Event";
 import { IEventRepository } from "../repositories/EventRepository";
 import { EventViewModel } from "../view-model/EventViewModel";
+import { auth } from '../common/middlewares/auth'
+import { IUserRepository } from "../repositories";
 
 export class EventController extends ControllerBase<IEventRepository> {
 	public static readonly baseRouter: string = "/api/events"
 	constructor(
 		app: Application,
 		repository: IEventRepository,
+		private userRepository: IUserRepository
 	) {
 		super(app, repository)
 	}
@@ -63,15 +66,25 @@ export class EventController extends ControllerBase<IEventRepository> {
 		}
 	}
 
-	public async save(req: Request, res: Response): Promise<void> {
+	public async save(req: Request | any, res: Response): Promise<void> {
 		try {
 			const body: EventViewModel = req.body
+
 			if (!body) {
 				res.status(400).json({ message: "Body is required" })
 			}
 			body.ticketsSold = 0
 			const data = new EventModel(body)
-
+			const user = req.user
+			if (!user) {
+				res.status(401).json({ message: "Access denied" })
+				return
+			}
+			const typeUser = await (await this.userRepository.getById(user.id)).type
+			if (typeUser !== 'admin') {
+				res.status(401).json({ message: "Access denied" })
+				return
+			}
 			const event = await this.repository.create(data)
 			const response = new EventViewModel(event)
 
@@ -88,7 +101,7 @@ export class EventController extends ControllerBase<IEventRepository> {
 	}
 	public async registerRoutes(): Promise<void> {
 		this.app.get(EventController.baseRouter, this.getAll.bind(this))
-		this.app.post(EventController.baseRouter, this.save.bind(this))
+		this.app.post(EventController.baseRouter, auth, this.save.bind(this))
 		this.app.get(`${EventController.baseRouter}/:id`, this.getById.bind(this))
 		this.app.get(`${EventController.baseRouter}/by-name/:name`, this.getByName.bind(this))
 	}
