@@ -5,7 +5,7 @@ import { IUserRepository } from "../repositories/UserRepository";
 import { UserViewModel } from "../view-model/UserViewModel";
 
 export class UserController extends ControllerBase<IUserRepository> {
-	public static readonly baseRouter: string = "api/uers"
+	public static readonly baseRouter: string = "/api/users"
 	constructor(app: Application, repository: IUserRepository) {
 		super(app, repository)
 	}
@@ -29,7 +29,7 @@ export class UserController extends ControllerBase<IUserRepository> {
 		}
 	}
 
-	public async getAll(_: Request, res: Response): Promise<void> {
+	public async getAll(req: Request, res: Response): Promise<void> {
 		try {
 			const users = await this.repository.getAll()
 			const response = users.map((user) => new UserViewModel(user))
@@ -82,7 +82,7 @@ export class UserController extends ControllerBase<IUserRepository> {
 	}
 	public async registerRoutes(): Promise<void> {
 		this.app.get(UserController.baseRouter, this.getAll.bind(this))
-		this.app.get(UserController.baseRouter, this.save.bind(this))
+		this.app.post(UserController.baseRouter, this.save.bind(this))
 		this.app.get(`${UserController.baseRouter}/:id`, this.getById.bind(this))
 	}
 }
