@@ -45,23 +45,12 @@ export async function up(knex: Knex): Promise<void> {
     .references("id").inTable(tableName.COMPANIES)
   })
 
-  await knex.schema.createTable(tableName.TICKETS, function(table) {
-    table.increments("id", {primaryKey: true})
-    table.timestamps(true, true)
-    table.integer("event_id").notNullable()
-    table
-    .foreign(
-      "event_id", `${tableName.TICKETS}_${tableName.EVENTS}`
-    )
-    .references("id").inTable(tableName.EVENTS)
-  })
-
   await knex.schema.createTable(tableName.PURCHASES, function(table) {
     table.increments("id", {primaryKey: true})
     table.dateTime("purchase_made_in").notNullable()
     table.timestamps(true, true)
     table.integer("user_id").notNullable()
-    table.integer("ticket_id").notNullable()
+    table.integer("event_id").notNullable()
     table
     .foreign(
       "user_id", `${tableName.PURCHASES}_${tableName.USERS}`
@@ -69,16 +58,15 @@ export async function up(knex: Knex): Promise<void> {
     .references("id").inTable(tableName.USERS)
     table
     .foreign(
-      "ticket_id", `${tableName.PURCHASES}_${tableName.TICKETS}`
+      "event_id", `${tableName.PURCHASES}_${tableName.EVENTS}`
     )
-    .references("id").inTable(tableName.TICKETS)
+    .references("id").inTable(tableName.EVENTS)
   })
 }
 
 
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTable(tableName.PURCHASES);
-  await knex.schema.dropTable(tableName.TICKETS);
   await knex.schema.dropTable(tableName.EVENTS);
   await knex.schema.dropTable(tableName.PLACES);
   await knex.schema.dropTable(tableName.COMPANIES);
