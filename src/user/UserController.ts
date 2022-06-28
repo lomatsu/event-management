@@ -3,12 +3,48 @@ import { ControllerBase } from "../common/ControllerBase";
 import { UserModel } from "../database/model/User";
 import { IUserRepository } from "../repositories/UserRepository";
 import { UserViewModel } from "../view-model/UserViewModel";
+import jwt from 'jsonwebtoken'
+import { decrypt } from "../common/crypto"
+
+const secret = process.env.SECRET || ""
 
 export class UserController extends ControllerBase<IUserRepository> {
 	public static readonly baseRouter: string = "/api/users"
 	constructor(app: Application, repository: IUserRepository) {
 		super(app, repository)
 	}
+	public async login(req: Request, res: Response): Promise<void> {
+		try {
+			const { email, password } = req.body
+			if (!email) {
+				res.status(400).json({ message: "Email is required" })
+				return
+			}
+			if (!password) {
+				res.status(400).json({ message: "Password is required" })
+				return
+			}
+			const userExists = await this.repository.getByEmail(email)
+			if (!userExists) {
+				res.status(400).json({ message: "User doesn't exists" })
+				return
+			}
+			const checkPassword = await decrypt(password, userExists.password)
+			console.log("checkPassword", secret);
+
+			if (!checkPassword) {
+				res.status(400).json({ message: "Verify email and password" })
+				return
+			}
+
+			const token = jwt.sign({ id: userExists.id }, secret)
+			res.json({ token })
+		} catch (error) {
+			res.status(500).json({ message: "Error on login" })
+
+		}
+	}
+
 	public async getByEmail(req: Request, res: Response): Promise<void> {
 		try {
 			let email: string = req.params.email as string
@@ -84,5 +120,6 @@ export class UserController extends ControllerBase<IUserRepository> {
 		this.app.get(UserController.baseRouter, this.getAll.bind(this))
 		this.app.post(UserController.baseRouter, this.save.bind(this))
 		this.app.get(`${UserController.baseRouter}/:id`, this.getById.bind(this))
+		this.app.post(`${UserController.baseRouter}/login`, this.login.bind(this))
 	}
 }

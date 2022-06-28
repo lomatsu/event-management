@@ -4,6 +4,7 @@ import { PurchaseModel } from "../database/model/Purchase";
 import { IEventRepository, IPlaceRepository, IUserRepository } from "../repositories";
 import { IPurchaseRepository } from "../repositories/PurchaseRepository";
 import { PurchaseViewModel } from "../view-model/PurchaseViewModel";
+import { auth } from "../common/middlewares/auth"
 
 export class PurchaseController extends ControllerBase<IPurchaseRepository> {
 	public static readonly baseRouter: string = "/api/purchases"
@@ -55,8 +56,8 @@ export class PurchaseController extends ControllerBase<IPurchaseRepository> {
 			}
 			const event = await this.eventRepository.getById(body.eventId)
 			const eventCapacity = await (await this.placeRepository.getById(event.place_id)).total_amount as number
-			if(event.tickets_sold >= eventCapacity) {
-				res.status(400).json({message: "Tickets sold out"})
+			if (event.tickets_sold >= eventCapacity) {
+				res.status(400).json({ message: "Tickets sold out" })
 				return
 			}
 
@@ -80,7 +81,7 @@ export class PurchaseController extends ControllerBase<IPurchaseRepository> {
 	}
 	public async registerRoutes(): Promise<void> {
 		this.app.get(PurchaseController.baseRouter, this.getAll.bind(this))
-		this.app.post(PurchaseController.baseRouter, this.save.bind(this))
+		this.app.post(PurchaseController.baseRouter, auth, this.save.bind(this))
 		this.app.get(`${PurchaseController.baseRouter}/:id`, this.getById.bind(this))
 	}
 }
