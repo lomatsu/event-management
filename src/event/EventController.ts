@@ -10,6 +10,26 @@ export class EventController extends ControllerBase<IEventRepository> {
 	constructor(app: Application, repository: IEventRepository, private ticketRepository: ITicketRepository) {
 		super(app, repository)
 	}
+
+	public async getByName(req: Request, res: Response): Promise<void> {
+		try {
+			const name: string = req.params.name as string
+			if (!name) {
+				res.status(400).json({ message: "Event name is required" })
+				return
+			}
+			const event = await this.repository.getByName(name)
+			if (!event) {
+				res.status(404).end()
+				return
+			}
+			const response = new EventViewModel(event)
+
+			res.json(response)
+		} catch (error) {
+			res.status(500).json({ message: "Error on get event by name" })
+		}
+	}
 	public async getAll(_: Request, res: Response): Promise<void> {
 		try {
 			const events = await this.repository.getAll()
@@ -33,7 +53,7 @@ export class EventController extends ControllerBase<IEventRepository> {
 				res.status(404).end()
 				return
 			}
-			const response = await this.repository.getById(id)
+			const response = new EventViewModel(event)
 
 			res.json(response)
 		} catch (error) {
@@ -59,12 +79,10 @@ export class EventController extends ControllerBase<IEventRepository> {
 	public delete(req: Request, res: Response): void {
 		throw new Error("Method not implemented.");
 	}
-	public getByName(req: Request, res: Response): void {
-		throw new Error("Method not implemented.");
-	}
 	public async registerRoutes(): Promise<void> {
 		this.app.get(EventController.baseRouter, this.getAll.bind(this))
 		this.app.post(EventController.baseRouter, this.save.bind(this))
 		this.app.get(`${EventController.baseRouter}/:id`, this.getById.bind(this))
+		this.app.get(`${EventController.baseRouter}/by-name/:name`, this.getByName.bind(this))
 	}
 }
