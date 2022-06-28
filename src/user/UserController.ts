@@ -9,6 +9,26 @@ export class UserController extends ControllerBase<IUserRepository> {
 	constructor(app: Application, repository: IUserRepository) {
 		super(app, repository)
 	}
+	public async getByEmail(req: Request, res: Response): Promise<void> {
+		try {
+			let email: string = req.params.email as string
+			if (!email) {
+				res.status(400).json({ message: "Email is required" })
+				return
+			}
+			const user = await this.repository.getByEmail(email)
+			if (!user) {
+				res.status(404).end()
+				return
+			}
+			const response = new UserViewModel(user)
+
+			res.json(response)
+		} catch (error) {
+			res.status(500).json({ message: "Error on get user by email" })
+		}
+	}
+
 	public async getAll(_: Request, res: Response): Promise<void> {
 		try {
 			const users = await this.repository.getAll()
