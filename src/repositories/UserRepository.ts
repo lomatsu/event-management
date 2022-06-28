@@ -4,11 +4,14 @@ import { UserModel } from "../database/model/User";
 import { IRepository } from "./Repository";
 
 export interface IUserRepository extends IRepository<UserModel> {
-
+	getByEmail(email: string): Promise<UserModel>
 }
 
 export class UserRepository implements IUserRepository {
 	constructor(private db: Knex) { }
+	getByEmail(email: string): Promise<UserModel> {
+		return this.db.select("*").from(tableName.USERS).where({ email }).then((d) => d[0])
+	}
 	getAll(): Promise<UserModel[]> {
 		return this.db.select("*").from(tableName.USERS)
 	}
