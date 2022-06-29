@@ -21,25 +21,20 @@ Projeto escrito utilizando [NodeJS](https://nodejs.org/en/), [Express](https://e
 src
   |_ bin
   |_ common
-  |_ company
+  |     |_ middlewares
   |_ config
-  |_ event
   |_ database
+  |     |_ helps
   |     |_ migrations
   |     |_ model
   |     |_ seeds
+  |_ event
+  |_ purchase
   |_ repositories
   |_ routes
-  |_ ticket
   |_ user
   |_ view-model
   app.ts
-.gitignore
-jest.config
-package-lock.json
-package.json
-README.md
-tsconfig.json
 ```
 
 ## Usage
