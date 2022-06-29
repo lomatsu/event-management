@@ -107,15 +107,6 @@ export class UserController extends ControllerBase<IUserRepository> {
 			res.status(500).json({ message: "Error on save user" })
 		}
 	}
-	public update(req: Request, res: Response): void {
-		throw new Error("Method not implemented.");
-	}
-	public delete(req: Request, res: Response): void {
-		throw new Error("Method not implemented.");
-	}
-	public getByName(req: Request, res: Response): void {
-		throw new Error("Method not implemented.");
-	}
 	public async registerRoutes(): Promise<void> {
 		this.app.get(UserController.baseRouter, this.getAll.bind(this))
 		this.app.post(UserController.baseRouter, this.save.bind(this))

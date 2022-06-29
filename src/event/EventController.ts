@@ -121,12 +121,6 @@ export class EventController extends ControllerBase<IEventRepository> {
 			res.status(500).json({ message: "Error on save event" })
 		}
 	}
-	public update(req: Request, res: Response): void {
-		throw new Error("Method not implemented.");
-	}
-	public delete(req: Request, res: Response): void {
-		throw new Error("Method not implemented.");
-	}
 	public async registerRoutes(): Promise<void> {
 		this.app.get(EventController.baseRouter, this.getAll.bind(this))
 		this.app.post(EventController.baseRouter, auth, this.save.bind(this))
