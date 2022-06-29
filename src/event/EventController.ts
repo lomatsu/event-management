@@ -27,7 +27,7 @@ export class EventController extends ControllerBase<IEventRepository> {
 				res.status(400).json({ message: "Event name is required" })
 				return
 			}
-			const event = await this.repository.getByName(name)
+			const event: EventModel = await this.repository.getByName(name)
 			if (!event) {
 				res.status(404).end()
 				return

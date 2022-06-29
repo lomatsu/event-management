@@ -9,7 +9,6 @@ import knex from "../database/connection"
 import http from "http"
 import { Request, Response } from "express"
 import Debug from "../common/debug"
-//  import { } from "../repositories"
 import { AddressInfo } from "net"
 import { tableName } from "../database/helps"
 import { registerUserRoute, registerEventRoute, registerPurchaseRoute } from "../routes"
@@ -58,7 +57,6 @@ registerPurchaseRoute(
 	new PlaceRepository(knex),
 	new EventRepository(knex)
 )
-
 
 /**
  * Get port from environment and store in Express.
